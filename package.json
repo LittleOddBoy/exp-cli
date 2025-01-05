@@ -1,0 +1,42 @@
+{
+  "name": "exp-cli",
+  "version": "0.0.1",
+  "description": "💵 A expense CLI tool as a solution to track your monthly/yearly finance",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LittleOddBoy/exp-cli.git"
+  },
+  "keywords": [
+    "cli",
+    "expense",
+    "nodejs",
+    "js"
+  ],
+  "author": "Amirhosein Kalari <hosein.kalari.1387@gmail.com>",
+  "contributors": [
+    {
+      "name": "Erfan Atashroo",
+      "email": "meatish2008@gmail.com"
+    },
+    {
+      "name": "Amirhosein Kalari",
+      "email": "hosein.kalari.1387@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LittleOddBoy/exp-cli/issues"
+  },
+  "homepage": "https://github.com/LittleOddBoy/exp-cli#readme",
+  "type": "commonjs",
+  "dependencies": {
+    "commander": "^13.0.0"
+  },
+  "bin": {
+    "exp": "./main.js"
+  }
+}
