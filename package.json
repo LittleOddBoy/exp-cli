@@ -4,7 +4,7 @@
   "description": "💵 A expense CLI tool as a solution to track your monthly/yearly finance",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node src/main.js"
   },
   "repository": {
     "type": "git",
@@ -34,9 +34,11 @@
   "homepage": "https://github.com/LittleOddBoy/exp-cli#readme",
   "type": "commonjs",
   "dependencies": {
-    "commander": "^13.0.0"
+    "@inquirer/prompts": "^7.2.1",
+    "commander": "^13.0.0",
+    "yoctocolors-cjs": "^2.1.2"
   },
   "bin": {
-    "exp": "./main.js"
+    "exp": "./src/main.js"
   }
 }
