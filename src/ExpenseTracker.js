@@ -1,19 +1,20 @@
-const fs = require("node:fs");
+const { existsSync, writeFileSync } = require("node:fs");
+const fs = require("node:fs/promises");
 const colors = require("yoctocolors-cjs");
 
 class ExpenseTracker {
   constructor(storageFile) {
     this.storageFile = storageFile;
 
-    if (!fs.existsSync(this.storageFile)) {
+    if (!existsSync(this.storageFile)) {
       const defaultData = [];
-      fs.writeFileSync(this.storageFile, JSON.stringify(defaultData, null, 2));
+      writeFileSync(this.storageFile, JSON.stringify(defaultData, null, 2));
     }
   }
 
-  readExpenses() {
+  async readExpenses() {
     try {
-      const data = fs.readFileSync(this.storageFile, "utf-8");
+      const data = await fs.readFile(this.storageFile, "utf-8");
       return JSON.parse(data);
     } catch {
       console.log(
@@ -26,7 +27,7 @@ class ExpenseTracker {
 
   async writeExpenses(expenses) {
     try {
-      fs.writeFileSync(this.storageFile, JSON.stringify(expenses));
+      await fs.writeFile(this.storageFile, JSON.stringify(expenses));
     } catch {
       console.log(
         colors.red("Something unexpected happened in file saving process.")
@@ -35,7 +36,7 @@ class ExpenseTracker {
   }
 
   async addExpense(amount, category, date) {
-    const data = this.readExpenses();
+    const data = await this.readExpenses();
     const newRecord = { id: crypto.randomUUID(), amount, category, date };
     data.push(newRecord);
     this.writeExpenses(data);
@@ -50,6 +51,7 @@ class ExpenseTracker {
     // Ensures exact match
     return date.toISOString().startsWith(dateStr);
   }
+
   isValidAmount(amount) {
     // Matches integers or floats with up to 2 decimal places
     const amountRegex = /^\d+(\.\d{1,2})?$/;

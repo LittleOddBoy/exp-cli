@@ -66,7 +66,7 @@ program
     }
 
     // add the expense
-    exp.addExpense(amount, category, date);
+    await exp.addExpense(amount, category, date);
   });
 
 program.parse(process.argv);
