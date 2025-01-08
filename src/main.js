@@ -2,7 +2,7 @@
 
 const { Command } = require("commander");
 const path = require("node:path");
-const { input } = require("@inquirer/prompts");
+const { input, select } = require("@inquirer/prompts");
 const colors = require("yoctocolors-cjs");
 
 const ExpenseTracker = require("./ExpenseTracker");
@@ -83,5 +83,26 @@ program
     // add the expense
     await exp.addExpense(amount, description, category, date);
   });
+
+program.command("remove").action(async () => {
+  // create a list of choices from the current data
+  const data = await exp.readExpenses();
+  const choices = data.map((item) => {
+    return {
+      name: item.description,
+      value: item.id,
+      description: `category: ${item.category}, date: ${item.date}`,
+    };
+  });
+
+  // display the list of choices to select
+  const id = await select({
+    message: "Choose which expense you wanna delete",
+    choices,
+  });
+
+  // remove the expense
+  exp.removeExpense(id);
+});
 
 program.parse(process.argv);

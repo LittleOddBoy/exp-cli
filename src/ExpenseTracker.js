@@ -1,5 +1,6 @@
 const { existsSync, writeFileSync } = require("node:fs");
 const fs = require("node:fs/promises");
+const { select } = require("@inquirer/prompts")
 const colors = require("yoctocolors-cjs");
 
 class ExpenseTracker {
@@ -71,6 +72,14 @@ class ExpenseTracker {
     // Ensures it's a valid, non-negative number
     return !isNaN(num) && num >= 0;
   }
+
+  async removeExpense(id) {
+    const data = await this.readExpenses();
+    const modifiedData = data.filter((item) => item.id !== id);
+
+    await this.writeExpenses(modifiedData);
+  }
+
 }
 
 module.exports = ExpenseTracker;
