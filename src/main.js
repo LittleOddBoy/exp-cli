@@ -26,13 +26,15 @@ program
   .command("add")
   .description("Add a new expense")
   .option("-a, --amount <integer>", "specify the expense amount")
+  .option("-s, --description <string>", "a description for the expense")
   .option("-c, --category <category>", "select the category of expense")
-  .option("-d, --date <date-string>", "considered date in YYYY-MM-DD format")
+  .option("-t, --date <date-string>", "considered date in YYYY-MM-DD format")
   .action(async (options) => {
     // evaluate parameters if their argument has been passed
     let amount = options.amount;
     let category = options.category;
     let date = options.date;
+    let description = options.description;
 
     // ask for parameters if any of them they haven't been passed
     if (!amount) amount = await input({ message: "How much you've spend?" });
@@ -45,6 +47,11 @@ program
     if (!date)
       date = await input({
         message: "When did you do that? (enter in YYYY-MM-DD format, please)",
+      });
+
+    if (!description)
+      description = await input({
+        message: "Write a description for your expense",
       });
 
     // validate the amount and handle invalid cases
@@ -65,8 +72,16 @@ program
       return;
     }
 
+    // validate the description and handle too long texts
+    if (description.length > 50) {
+      console.log(
+        colors.bgRed("The description should be less than 50 characters")
+      );
+      return;
+    }
+
     // add the expense
-    await exp.addExpense(amount, category, date);
+    await exp.addExpense(amount, description, category, date);
   });
 
 program.parse(process.argv);
