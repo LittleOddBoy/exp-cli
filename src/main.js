@@ -3,6 +3,7 @@
 const { Command } = require("commander");
 const path = require("node:path");
 const { input } = require("@inquirer/prompts");
+const colors = require("yoctocolors-cjs");
 
 const ExpenseTracker = require("./ExpenseTracker");
 
@@ -28,26 +29,33 @@ program
   .option("-c, --category <category>", "select the category of expense")
   .option("-d, --date <date-string>", "considered date in YYYY-MM-DD format")
   .action(async (options) => {
+    // evaluate parameters if their argument has been passed
     let amount = options.amount;
     let category = options.category;
     let date = options.date;
-    if (!amount) {
-      amount = await input({ message: "How much you've spend?" });
-    }
 
-    if (!category) {
+    // ask for parameters if any of them they haven't been passed
+    if (!amount) amount = await input({ message: "How much you've spend?" });
+
+    if (!category)
       category = await input({
         message: "What's the category fits the expense?",
       });
-    }
 
-    if (!date) {
+    if (!date)
       date = await input({
         message: "When did you do that? (enter in YYYY-MM-DD format, please)",
       });
+
+    // throw an error if the format of date wasn't correct
+    if (!exp.isValidDate(date)) {
+      console.log(
+        colors.bgRed("The format of the date that was entered is not correct!")
+      );
+      return;
     }
 
-    // console.log(amount, category, date);
+    // add the expense
     exp.addExpense(amount, category, date);
   });
 

@@ -36,15 +36,20 @@ class ExpenseTracker {
   }
 
   async addExpense(amount, category, date) {
-    // console.log(await this.readExpenses());
     const data = this.readExpenses();
-    const newExpense = { amount, category, date };
-    data.push(newExpense);
-
+    const newRecord = { id: crypto.randomUUID(), amount, category, date };
+    data.push(newRecord);
     this.writeExpenses(data);
+  }
 
-    // console.log("this is the new expense => ", newExpense);
-    // console.log(amount, category, date, "from the method");
+  isValidDate(dateStr) {
+    // check if the date has a valid YYYY-MM-DD format
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(dateStr)) return false;
+
+    const date = new Date(dateStr);
+    // Ensures exact match
+    return date.toISOString().startsWith(dateStr);
   }
 }
 
