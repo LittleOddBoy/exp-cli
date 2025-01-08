@@ -57,7 +57,7 @@ program
       return;
     }
 
-    // throw an error if the format of date wasn't correct
+    // validate the data and handle invalid formats
     if (!exp.isValidDate(date)) {
       console.log(
         colors.bgRed("The format of the date that was entered is not correct!")
