@@ -50,6 +50,18 @@ class ExpenseTracker {
     // Ensures exact match
     return date.toISOString().startsWith(dateStr);
   }
+  isValidAmount(amount) {
+    // Matches integers or floats with up to 2 decimal places
+    const amountRegex = /^\d+(\.\d{1,2})?$/;
+
+    // Fails format validation
+    if (!amountRegex.test(amount)) return false;
+
+    const num = parseFloat(amount);
+
+    // Ensures it's a valid, non-negative number
+    return !isNaN(num) && num >= 0;
+  }
 }
 
 module.exports = ExpenseTracker;

@@ -47,6 +47,16 @@ program
         message: "When did you do that? (enter in YYYY-MM-DD format, please)",
       });
 
+    // validate the amount and handle invalid cases
+    if (!exp.isValidAmount(amount)) {
+      console.log(
+        colors.bgRed(
+          "The entered amount is not valid (it should be a non-negative with at last 2 decimal points"
+        )
+      );
+      return;
+    }
+
     // throw an error if the format of date wasn't correct
     if (!exp.isValidDate(date)) {
       console.log(
