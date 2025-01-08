@@ -21,7 +21,6 @@ class ExpenseTracker {
           "We couldn't read your expenses history, something unexpected happened."
         )
       );
-      return [];
     }
   }
 
