@@ -35,11 +35,18 @@ class ExpenseTracker {
     }
   }
 
-  async addExpense(amount, category, date) {
+  async addExpense(amount, description, category, date) {
     const data = await this.readExpenses();
-    const newRecord = { id: crypto.randomUUID(), amount, category, date };
+    const newRecord = {
+      id: crypto.randomUUID(),
+      amount,
+      description,
+      category,
+      date,
+    };
     data.push(newRecord);
     this.writeExpenses(data);
+    console.log(colors.green("Your task have been added successfully!"));
   }
 
   isValidDate(dateStr) {
