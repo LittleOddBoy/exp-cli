@@ -84,25 +84,28 @@ program
     await exp.addExpense(amount, description, category, date);
   });
 
-program.command("remove").action(async () => {
-  // create a list of choices from the current data
-  const data = await exp.readExpenses();
-  const choices = data.map((item) => {
-    return {
-      name: item.description,
-      value: item.id,
-      description: `category: ${item.category}, date: ${item.date}`,
-    };
-  });
+program
+  .command("remove")
+  .description("remove a expense from a list of choices")
+  .action(async () => {
+    // create a list of choices from the current data
+    const data = await exp.readExpenses();
+    const choices = data.map((item) => {
+      return {
+        name: item.description,
+        value: item.id,
+        description: `category: ${item.category}, date: ${item.date}`,
+      };
+    });
 
-  // display the list of choices to select
-  const id = await select({
-    message: "Choose which expense you wanna delete",
-    choices,
-  });
+    // display the list of choices to select
+    const id = await select({
+      message: "Choose which expense you wanna delete",
+      choices,
+    });
 
-  // remove the expense
-  exp.removeExpense(id);
-});
+    // remove the expense
+    exp.removeExpense(id);
+  });
 
 program.parse(process.argv);
