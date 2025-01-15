@@ -4,6 +4,7 @@ const { Command } = require("commander");
 const path = require("node:path");
 const { input, select } = require("@inquirer/prompts");
 const colors = require("yoctocolors-cjs");
+const Table = require("cli-table3");
 
 const ExpenseTracker = require("./ExpenseTracker");
 
@@ -106,6 +107,29 @@ program
 
     // remove the expense
     exp.removeExpense(id);
+  });
+
+program
+  .command("read")
+  .description("reading a expense from list")
+  .action(async () => {
+    const data = await exp.readExpenses();
+    let table = new Table({
+      head: ["description", "category", "date", "amount"],
+      colWidths: [20, 30],
+      colAligns: true,
+      rowAligns: true,
+    });
+    const readExp = data.map((item) => {
+      table.push([
+        `${[item.description]}`,
+        `${[item.category]}`,
+        `${[item.date]}`,
+        `${[item.amount]}`,
+      ]);
+    });
+
+    console.log(table.toString());
   });
 
 program.parse(process.argv);
