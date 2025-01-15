@@ -177,8 +177,6 @@ program
       console.log(table.toString());
     }
     if (answer === "category") {
-      console.log("ok"); // Verify the condition is reached
-
       let table = new Table({
         head: ["ID", "category", "description", "amount"],
         colWidths: [40, 30],
