@@ -119,6 +119,12 @@ program
       colWidths: [20, 30],
       colAligns: true,
       rowAligns: true,
+      style: {
+        "padding-left": 1,
+        "padding-right": 1,
+        border: [],
+      },
+      rowHeights: [0.5],
     });
     const readExp = data.map((item) => {
       table.push([
