@@ -112,7 +112,7 @@ class ExpenseTracker {
 
   async updateExpense(id, amount, description, category, date) {
     const data = await this.readExpenses();
-    const updateRecord = await data.find((item) => {
+    await data.find((item) => {
       if (item.id === id) {
         (item.amount = amount),
           (item.description = description),
@@ -120,7 +120,6 @@ class ExpenseTracker {
           (item.date = date);
       }
     });
-    data.push(updateRecord);
     await this.writeExpenses(data);
     console.log(colors.green("Your task have been added successfully!"));
   }
