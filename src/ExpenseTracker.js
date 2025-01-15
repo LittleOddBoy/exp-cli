@@ -116,7 +116,7 @@ class ExpenseTracker {
       if (item.id === id) {
         (item.amount = amount),
           (item.description = description),
-          (item.category = category.category),
+          (item.category = category),
           (item.date = date);
       }
     });
