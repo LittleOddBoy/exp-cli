@@ -115,8 +115,8 @@ program
   .action(async () => {
     const data = await exp.readExpenses();
     let table = new Table({
-      head: ["description", "category", "date", "amount"],
-      colWidths: [20, 30],
+      head: ["ID", "description", "category", "date", "amount"],
+      colWidths: [40, 30],
       colAligns: true,
       rowAligns: true,
       style: {
@@ -128,6 +128,7 @@ program
     });
     const readExp = data.map((item) => {
       table.push([
+        `${item.id}`,
         `${[item.description]}`,
         `${[item.category]}`,
         `${[item.date]}`,
