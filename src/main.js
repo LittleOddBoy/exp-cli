@@ -114,29 +114,132 @@ program
   .description("reading a expense from list")
   .action(async () => {
     const data = await exp.readExpenses();
-    let table = new Table({
-      head: ["ID", "description", "category", "date", "amount"],
-      colWidths: [40, 30],
-      colAligns: true,
-      rowAligns: true,
-      style: {
-        "padding-left": 1,
-        "padding-right": 1,
-        border: [],
-      },
-      rowHeights: [0.5],
-    });
-    const readExp = data.map((item) => {
-      table.push([
-        `${item.id}`,
-        `${[item.description]}`,
-        `${[item.category]}`,
-        `${[item.date]}`,
-        `${[item.amount]}`,
-      ]);
+    const answer = await select({
+      message: "Select a things you want",
+      choices: [
+        { name: "amount", value: "amount", description: "Show only amount" },
+        {
+          name: "category",
+          value: "category",
+          description: "Show only category",
+        },
+        { name: "date", value: "date", description: "Show only date" },
+        {
+          name: "description",
+          value: "description",
+          description: "Show only description",
+        },
+        { name: "all", value: "all", description: "Show all record" },
+      ],
+      default: "all",
     });
 
-    console.log(table.toString());
+    if (answer === "all") {
+      let table = new Table({
+        head: ["ID", "description", "category", "date", "amount"],
+        colWidths: [40, 30],
+        colAligns: true,
+        rowAligns: true,
+        style: {
+          "padding-left": 1,
+          "padding-right": 1,
+          border: [],
+        },
+        rowHeights: [0.5],
+      });
+      data.map((item) => {
+        table.push([
+          `${item.id}`,
+          `${[item.description]}`,
+          `${[item.category]}`,
+          `${[item.date]}`,
+          `${[item.amount]}`,
+        ]);
+      });
+      console.log(table.toString());
+    }
+    if (answer === "amount") {
+      let table = new Table({
+        head: ["ID", "amount", "description"],
+        colWidths: [40, 30],
+        colAligns: true,
+        rowAligns: true,
+        style: {
+          "padding-left": 1,
+          "padding-right": 1,
+          border: [],
+        },
+        rowHeights: [0.5],
+      });
+      data.map((item) => {
+        table.push([`${item.id}`, `${item.amount}`, `${item.description}`]);
+      });
+      console.log(table.toString());
+    }
+    if (answer === "category") {
+      console.log("ok"); // Verify the condition is reached
+
+      let table = new Table({
+        head: ["ID", "category", "description", "amount"],
+        colWidths: [40, 30],
+        colAligns: true,
+        rowAligns: true,
+        style: {
+          "padding-left": 1,
+          "padding-right": 1,
+          border: [],
+        },
+        rowHeights: [0.5],
+      });
+
+      console.log("Data:", data); // Debugging log for data
+
+      data.map((item) => {
+        table.push([
+          `${item.id}`,
+          `${item.category}`,
+          `${item.description}`,
+          `${item.amount}`,
+        ]);
+      });
+      console.log(table.toString());
+    }
+    if (answer === "date") {
+      let table = new Table({
+        head: ["ID", "date", "amount"],
+        colWidths: [30, 40],
+        colAligns: true,
+        rowAligns: true,
+        style: {
+          "padding-left": 0,
+          "padding-right": 0,
+          border: [],
+        },
+        rowHeights: [0.5],
+      });
+      data.map((item) => {
+        table.push([`${item.id}`, `${item.date}`, `${item.amount}`]);
+      });
+      console.log(table.toString());
+    }
+    if (answer === "description") {
+      let table = new Table({
+        head: ["ID", "description", "amount"],
+        colWidths: [40, 30],
+        colAligns: true,
+        rowAligns: true,
+        style: {
+          "padding-left": 1,
+          "padding-right": 1,
+          border: [],
+        },
+        rowHeights: [0.5],
+      });
+      data.map((item) => {
+        table.push([`${item.id}`, `${item.description}`, `${item.amount}`]);
+      });
+      console.log(table.toString());
+    }
   });
 
 program.parse(process.argv);
