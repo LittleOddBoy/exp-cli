@@ -121,7 +121,7 @@ class ExpenseTracker {
       }
     });
     await this.writeExpenses(data);
-    console.log(colors.green("Your task have been added successfully!"));
+    console.log(colors.green("Your task have been done successfully!"));
   }
 }
 

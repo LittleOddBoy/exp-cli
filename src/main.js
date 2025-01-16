@@ -112,21 +112,33 @@ program
   .command("update")
   .description("update record")
   .description("Add a new expense")
-  .option("-i , --ID <integer>", "specify the expense id")
   .option("-a, --amount <integer>", "specify the expense amount")
   .option("-s, --description <string>", "a description for the expense")
   .option("-c, --category <category>", "select the category of expense")
   .option("-t, --date <date-string>", "considered date in YYYY-MM-DD format")
   .action(async (options) => {
     // evaluate parameters if their argument has been passed
-    let id = options.id;
+
+    const data = await exp.readExpenses();
+
+    const choices = data.map((item) => {
+      return {
+        name: item.description,
+        value: item.id,
+        description: `category: ${item.category}, date: ${item.date}`,
+      };
+    });
+    const id = await select({
+      message: "Choose item want update",
+      choices: choices,
+    });
+
     let amount = options.amount;
     let category = options.category;
     let date = options.date;
     let description = options.description;
 
     // ask for parameters if any of them they haven't been passed
-    if (!id) id = await input({ message: "ID?" });
 
     if (!amount) amount = await input({ message: "How much you've spend?" });
 
