@@ -110,8 +110,8 @@ program
   });
 
 program
-  .command("read")
-  .description("reading a expense from list")
+  .command("list")
+  .description("Listing all the expenses and their properties on a sheet/table")
   .action(async () => {
     const data = await exp.readExpenses();
     const answer = await select({
