@@ -109,135 +109,46 @@ program
     exp.removeExpense(id);
   });
 
-program
+  program
   .command("list")
-  .description("Listing all the expenses and their properties on a sheet/table")
-  .action(async () => {
+  .description("List all expenses with optional filters and dynamic fields")
+  .option("--amount", "Include the amount of the expense")
+  .option("--category", "Include the category of the expense")
+  .option("--date", "Include the date of the expense")
+  .action(async (options) => {
     const data = await exp.readExpenses();
-    const answer = await select({
-      message: "Select a things you want",
-      choices: [
-        { name: "amount", value: "amount", description: "Show only amount" },
-        {
-          name: "category",
-          value: "category",
-          description: "Show only category",
-        },
-        { name: "date", value: "date", description: "Show only date" },
-        {
-          name: "description",
-          value: "description",
-          description: "Show only description",
-        },
-        { name: "all", value: "all", description: "Show all record" },
-      ],
-      default: "all",
+
+    if (!data.length) {
+      console.log(colors.yellow("No expenses found!"));
+      return;
+    }
+
+    // If no options are specified, default to showing all properties
+    const showAllProperties = !options.amount && !options.category && !options.date;
+
+    // Initialize the CLI table with headers
+    const headers = ["Description"]; // Always include "Description"
+    if (showAllProperties || options.amount) headers.push("Amount");
+    if (showAllProperties || options.category) headers.push("Category");
+    if (showAllProperties || options.date) headers.push("Date");
+
+    const table = new Table({
+      head: headers.map((header) => colors.cyan(header)), // Add colors to headers
+      style: { border: [], head: [], compact: true },
     });
 
-    if (answer === "all") {
-      let table = new Table({
-        head: ["ID", "description", "category", "date", "amount"],
-        colWidths: [40, 30],
-        colAligns: true,
-        rowAligns: true,
-        style: {
-          "padding-left": 1,
-          "padding-right": 1,
-          border: [],
-        },
-        rowHeights: [0.5],
-      });
-      data.map((item) => {
-        table.push([
-          `${item.id}`,
-          `${[item.description]}`,
-          `${[item.category]}`,
-          `${[item.date]}`,
-          `${[item.amount]}`,
-        ]);
-      });
-      console.log(table.toString());
-    }
-    if (answer === "amount") {
-      let table = new Table({
-        head: ["ID", "amount", "description"],
-        colWidths: [40, 30],
-        colAligns: true,
-        rowAligns: true,
-        style: {
-          "padding-left": 1,
-          "padding-right": 1,
-          border: [],
-        },
-        rowHeights: [0.5],
-      });
-      data.map((item) => {
-        table.push([`${item.id}`, `${item.amount}`, `${item.description}`]);
-      });
-      console.log(table.toString());
-    }
-    if (answer === "category") {
-      let table = new Table({
-        head: ["ID", "category", "description", "amount"],
-        colWidths: [40, 30],
-        colAligns: true,
-        rowAligns: true,
-        style: {
-          "padding-left": 1,
-          "padding-right": 1,
-          border: [],
-        },
-        rowHeights: [0.5],
-      });
+    // Add rows dynamically
+    data.forEach((expense) => {
+      const row = [expense.description]; // Always include "Description"
+      if (showAllProperties || options.amount) row.push(expense.amount);
+      if (showAllProperties || options.category) row.push(expense.category);
+      if (showAllProperties || options.date) row.push(expense.date);
 
-      console.log("Data:", data); // Debugging log for data
+      table.push(row); // Add the row to the table
+    });
 
-      data.map((item) => {
-        table.push([
-          `${item.id}`,
-          `${item.category}`,
-          `${item.description}`,
-          `${item.amount}`,
-        ]);
-      });
-      console.log(table.toString());
-    }
-    if (answer === "date") {
-      let table = new Table({
-        head: ["ID", "date", "amount"],
-        colWidths: [30, 40],
-        colAligns: true,
-        rowAligns: true,
-        style: {
-          "padding-left": 0,
-          "padding-right": 0,
-          border: [],
-        },
-        rowHeights: [0.5],
-      });
-      data.map((item) => {
-        table.push([`${item.id}`, `${item.date}`, `${item.amount}`]);
-      });
-      console.log(table.toString());
-    }
-    if (answer === "description") {
-      let table = new Table({
-        head: ["ID", "description", "amount"],
-        colWidths: [40, 30],
-        colAligns: true,
-        rowAligns: true,
-        style: {
-          "padding-left": 1,
-          "padding-right": 1,
-          border: [],
-        },
-        rowHeights: [0.5],
-      });
-      data.map((item) => {
-        table.push([`${item.id}`, `${item.description}`, `${item.amount}`]);
-      });
-      console.log(table.toString());
-    }
+    // Display the table
+    console.log(table.toString());
   });
 
 program.parse(process.argv);
