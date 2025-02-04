@@ -4,6 +4,7 @@ const { Command } = require("commander");
 const path = require("node:path");
 const { input, select } = require("@inquirer/prompts");
 const colors = require("yoctocolors-cjs");
+const Table = require("cli-table3");
 
 const ExpenseTracker = require("./ExpenseTracker");
 
@@ -107,6 +108,50 @@ program
     // remove the expense
     exp.removeExpense(id);
   });
+
+
+  program
+  .command("list")
+  .description("List all expenses with optional filters and dynamic fields")
+  .option("--amount", "Include the amount of the expense")
+  .option("--category", "Include the category of the expense")
+  .option("--date", "Include the date of the expense")
+  .action(async (options) => {
+    const data = await exp.readExpenses();
+
+    if (!data.length) {
+      console.log(colors.yellow("No expenses found!"));
+      return;
+    }
+
+    // If no options are specified, default to showing all properties
+    const showAllProperties = !options.amount && !options.category && !options.date;
+
+    // Initialize the CLI table with headers
+    const headers = ["Description"]; // Always include "Description"
+    if (showAllProperties || options.amount) headers.push("Amount");
+    if (showAllProperties || options.category) headers.push("Category");
+    if (showAllProperties || options.date) headers.push("Date");
+
+    const table = new Table({
+      head: headers.map((header) => colors.cyan(header)), // Add colors to headers
+      style: { border: [], head: [], compact: true },
+    });
+
+    // Add rows dynamically
+    data.forEach((expense) => {
+      const row = [expense.description]; // Always include "Description"
+      if (showAllProperties || options.amount) row.push(expense.amount);
+      if (showAllProperties || options.category) row.push(expense.category);
+      if (showAllProperties || options.date) row.push(expense.date);
+
+      table.push(row); // Add the row to the table
+    });
+
+    // Display the table
+    console.log(table.toString());
+  });
+
 
 program
   .command("update")
