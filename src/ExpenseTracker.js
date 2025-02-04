@@ -1,13 +1,13 @@
 const { existsSync, writeFileSync } = require("node:fs");
 const fs = require("node:fs/promises");
-const { select } = require("@inquirer/prompts")
+const { select } = require("@inquirer/prompts");
 const colors = require("yoctocolors-cjs");
 
 class ExpenseTracker {
   constructor(storageFile) {
     this.storageFile = storageFile;
 
-    // check if the file exists to handle initializing the storage file 
+    // check if the file exists to handle initializing the storage file
     if (!existsSync(this.storageFile)) {
       const defaultData = [];
       writeFileSync(this.storageFile, JSON.stringify(defaultData, null, 2));
@@ -16,7 +16,7 @@ class ExpenseTracker {
 
   /**
    * Returns the latest data within the storage file
-   * @returns {array} 
+   * @returns {array}
    */
   async readExpenses() {
     try {
@@ -47,10 +47,10 @@ class ExpenseTracker {
 
   /**
    * Add a new record of expense into the storage file
-   * @param {number | string} amount 
-   * @param {string} description 
-   * @param {string} category 
-   * @param {string} date 
+   * @param {number | string} amount
+   * @param {string} description
+   * @param {string} category
+   * @param {string} date
    */
   async addExpense(amount, description, category, date) {
     const data = await this.readExpenses();
@@ -82,7 +82,7 @@ class ExpenseTracker {
   }
 
   /**
-   * returns whether the provided amount is a valid non-negative number with at last two decimal points 
+   * returns whether the provided amount is a valid non-negative number with at last two decimal points
    * @param {string} amount the string of amount you wanna validate
    * @returns {boolean}
    */
@@ -110,6 +110,19 @@ class ExpenseTracker {
     await this.writeExpenses(modifiedData);
   }
 
+  async updateExpense(id, amount, description, category, date) {
+    const data = await this.readExpenses();
+    await data.find((item) => {
+      if (item.id === id) {
+        (item.amount = amount),
+          (item.description = description),
+          (item.category = category),
+          (item.date = date);
+      }
+    });
+    await this.writeExpenses(data);
+    console.log(colors.green("Your task have been done successfully!"));
+  }
 }
 
 module.exports = ExpenseTracker;
